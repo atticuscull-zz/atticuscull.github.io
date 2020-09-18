@@ -1,37 +1,38 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Word from "./Word"
 
-class Wordlist extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            words: props.wordlist
-        }
-    }
+function Wordlist (props) {
+  const [words, setWords] = useState(props.wordlist)
+  //const [player, setPlayer] = useState()
+  console.log("hi");
+  console.log(props);
 
-    renderWord(inWord) {
-        let wordColor = "grey";
-        if(inWord === this.props.player.shibboleth){
-            wordColor = "green";
-        }
-        return (
-            <Word
-                word={inWord}
-                color={wordColor}
-                onClick={()=>{}}
-                key={inWord}
-            />
-        )
+  function renderWord(inWord) {
+    let wordColor = "grey";
+    if (inWord === props.player.shibboleth) {
+      wordColor = "green";
     }
+    return (
+      <Word
+        word={inWord}
+        color={wordColor}
+        onClick={() => { }}
+        key={inWord}
+      />
+    )
+  }
 
-    render() {
-        return(
-            <div className="wordList">
-                {this.state.words.map(e=>this.renderWord(e))}
-            </div>
-        );
-    }
-    
+  useEffect(() => {setWords(props.wordlist)}, [setWords, props]);
+
+  return (
+    <div className="wordlist">
+      <p className="header">Words</p>
+      <div style={{ width: "33%" }}>
+        {words.map(e => renderWord(e))}
+      </div>
+    </div>
+  );
+
 }
 
 export default Wordlist;
