@@ -1,39 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import Player from "./Player.js";
 
-class Playerlist extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      players: props.playerlist
-    }
-  }
+function Playerlist (props) {
+  const [players, setPlayers] = useState(props.playerlist);
 
-  onTeam() {
+  function onTeam() {
     return undefined;
   }
-  notOnTeam() {
+  function notOnTeam() {
     return undefined;
   }
 
-  renderPlayer(player) {
+  function renderPlayer(inPlayer) {
     return(
       <Player
-        name={player.name}
-        color={(this.props.player.name === player.name) ? "green": "grey"}
-        onClick={(this.props.player.shibboleth === player.shibboleth) ? this.onTeam : this.notOnTeam}
-        key={player.name}
+        name={inPlayer.name}
+        color={(props.player.name === inPlayer.name) ? "green": "grey"}
+        highlightColor={(props.player.name === inPlayer.name) ? "green" : "red"}
+        onClick={(props.player.shibboleth === inPlayer.shibboleth) ? onTeam : notOnTeam}
+        key={inPlayer.name}
       />
     )
   }
-
-  render() {
-    return(
-      <div className="playerlist">
-        {this.state.players.map(e=> this.renderPlayer(e))}
-      </div>
-    )
-  }
+  return(
+    <div 
+      className="playerlist" 
+    >
+      <p className="header">Players</p>
+      {players.map(e=> renderPlayer(e))}
+    </div>
+  )
 }
 
 export default Playerlist;

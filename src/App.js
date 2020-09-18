@@ -1,9 +1,12 @@
 import React from 'react';
 import Game from "./myStuff/Game";
+import './App.css';
 
 function App() {
   return (
-    <Game />
+    <div className="App">
+      <Game />
+    </div>
   );
 }
 

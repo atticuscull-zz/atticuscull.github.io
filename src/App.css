@@ -1,5 +1,8 @@
 .App {
-  text-align: center;
+  text-align: left;
+  background-color: #282c34;
+  min-height: 100vh;
+  padding: 6px
 }
 
 .App-logo {
@@ -13,6 +16,12 @@
   }
 }
 
+@font-face {
+    font-family: Whitney;
+    font-weight: bold;
+    src: url("./whitneysemibold.otf") format("opentype");
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -22,6 +31,58 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.word {
+  background-color: #33333300;
+  border: 0px solid #000000;
+  font-size: 24px;
+  font-family: "Whitney";
+  transition-duration: .5s;
+}
+
+.player {
+  background-color: #33333300;
+  border: 0px solid #000000;
+  font-size: 24px;
+  font-family: "Whitney";
+  transition-duration: .5s;
+}
+
+.start-button {
+  background-color: #797979;
+  border: 0px solid #000000;
+  border-radius: 5px;
+  font-size: 20px;
+  font-family: "Whitney";
+  
+}
+
+.playerlist {
+  background-color: #282c34;
+  display: inline-block;
+  border-width: 2px;
+  border-color: #111111;
+  border-style: solid;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.wordlist {
+  background-color: #282c34;
+  display: inline-block;
+  border-width: 2px;
+  border-color: #111111;
+  border-style: solid;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.header {
+  font-size: 30px;
+  font-family: "Whitney";
+  margin-top: 0px;
+  margin-bottom: 4px;
 }
 
 .App-link {
