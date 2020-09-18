@@ -85,6 +85,10 @@
   margin-bottom: 4px;
 }
 
+button:focus {
+  outline: 0;
+}
+
 .App-link {
   color: #61dafb;
 }

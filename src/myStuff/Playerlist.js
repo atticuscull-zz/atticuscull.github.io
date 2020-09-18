@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Player from "./Player.js";
 
 function Playerlist (props) {
@@ -12,16 +12,39 @@ function Playerlist (props) {
   }
 
   function renderPlayer(inPlayer) {
-    return(
-      <Player
+    if(inPlayer.active) {
+      return (<Player
         name={inPlayer.name}
-        color={(props.player.name === inPlayer.name) ? "green": "grey"}
+        color={(props.player.name === inPlayer.name) ? "green" : "grey"}
         highlightColor={(props.player.name === inPlayer.name) ? "green" : "red"}
         onClick={(props.player.shibboleth === inPlayer.shibboleth) ? onTeam : notOnTeam}
         key={inPlayer.name}
-      />
-    )
+
+      />)
+    } else if (props.gameRunning) {
+      return (<Player
+        name={inPlayer.name}
+        color={(props.player.name === inPlayer.name) ? "green" : "yellow"}
+        highlightColor={(props.player.name === inPlayer.name) ? "green" : "yellow"}
+        onClick={() => { }}
+        key={inPlayer.name}
+      />)
+    }
+    return (<Player
+      name={inPlayer.name}
+      color={(props.player.name === inPlayer.name) ? "green" : "grey"}
+      highlightColor={(props.player.name === inPlayer.name) ? "green" : "grey"}
+      onClick={() => { }}
+      key={inPlayer.name}
+    />)
+    
+
   }
+
+  useEffect(()=>{
+    setPlayers(props.playerlist);
+  },[setPlayers, props])
+
   return(
     <div 
       className="playerlist" 

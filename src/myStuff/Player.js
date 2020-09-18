@@ -1,33 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-class Player extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { currentColor: this.props.color };
-  }
-  
+function Player(props){
+  const [currentColor, setCurrentColor] = useState(props.color)
 
-  setColorDefault() {
-    this.setState({currentColor: this.props.color});
+  function setColorDefault() {
+    setCurrentColor(props.color);
   }
 
-  setColorHighlight() {
-    this.setState({ currentColor: this.props.highlightColor });
+  function setColorHighlight() {
+    setCurrentColor(props.highlightColor );
   }
 
-  render(){
-    return (
-      <button
-        className="player"
-        onClick={this.props.onClick}
-        style={{ color: this.state.currentColor }}
-        onMouseEnter={()=>this.setColorHighlight()}
-        onMouseLeave={()=>this.setColorDefault()}
-      >
-        {this.props.name}
-      </button>
-    );
-  }
+  useEffect(()=>{setCurrentColor(props.color)}, [setCurrentColor, props]);
+
+  return (
+    <button
+      className="player"
+      onClick={props.onClick}
+      style={{ color: currentColor }}
+      onMouseEnter={() => setColorHighlight()}
+      onMouseLeave={() => setColorDefault()}
+    >
+      {props.name}
+    </button>
+  )
   
 }
 

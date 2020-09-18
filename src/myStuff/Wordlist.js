@@ -3,9 +3,6 @@ import Word from "./Word"
 
 function Wordlist (props) {
   const [words, setWords] = useState(props.wordlist)
-  //const [player, setPlayer] = useState()
-  console.log("hi");
-  console.log(props);
 
   function renderWord(inWord) {
     let wordColor = "grey";
@@ -31,7 +28,7 @@ function Wordlist (props) {
         {words.map(e => renderWord(e))}
       </div>
     </div>
-  );
+  )
 
 }
 
