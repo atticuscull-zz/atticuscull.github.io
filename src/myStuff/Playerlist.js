@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Player from "./Player.js";
 import GuessTeamButton from "./GuessTeamButton";
+import styles from "./Constants/styles";
 
 function Playerlist (props) {
   const [players, setPlayers] = useState(props.playerlist);
@@ -12,8 +13,8 @@ function Playerlist (props) {
     if(inPlayer.active) {
       return (<Player
         name={inPlayer.name}
-        color={isThisPlayer ? "green" : "grey"}
-        highlightColor={isThisPlayer ? "green" : "red"}
+        color={isThisPlayer ? styles.players.thisPlayerColor : styles.players.defaultColor}
+        highlightColor={isThisPlayer ? styles.players.thisPlayerColor : styles.players.highlightColor}
         key={inPlayer.name}
         changeHighlightCount={(n) => { setHighlightCount(highlightCount + n*(!isThisPlayer)) }}
         active={true}
@@ -22,8 +23,8 @@ function Playerlist (props) {
     } else if (props.gameRunning) {
       return (<Player
         name={inPlayer.name}
-        color={isThisPlayer ? "green" : "yellow"}
-        highlightColor={isThisPlayer ? "green" : "yellow"}
+        color={isThisPlayer ? styles.players.thisPlayerColor : styles.players.notPlayingColor}
+        highlightColor={isThisPlayer ? styles.players.thisPlayerColor : styles.players.notPlayingColor}
         key={inPlayer.name}
         changeHighlightCount={(n)=>{}}
         active={false}
@@ -31,8 +32,8 @@ function Playerlist (props) {
     }
     return (<Player
       name={inPlayer.name}
-      color={isThisPlayer ? "green" : "grey"}
-      highlightColor={isThisPlayer ? "green" : "grey"}
+      color={isThisPlayer ? styles.players.thisPlayerColor : styles.players.beforeGameColor}
+      highlightColor={isThisPlayer ? styles.players.thisPlayerColor : styles.players.beforeGameColor}
       key={inPlayer.name}
       changeHighlightCount={(n) => {}}
       active={false}
