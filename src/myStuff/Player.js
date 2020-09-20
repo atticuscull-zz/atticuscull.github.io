@@ -1,25 +1,35 @@
 import React, { useEffect, useState } from "react";
 
 function Player(props){
-  const [currentColor, setCurrentColor] = useState(props.color)
+  const [currentColor, setCurrentColor] = useState(props.color);
+  const [highlighted, setHighlighted] = useState(false);
+  const [active, setActive] = useState(false);
 
   function setColorDefault() {
     setCurrentColor(props.color);
   }
 
   function setColorHighlight() {
-    setCurrentColor(props.highlightColor );
+    setCurrentColor(props.highlightColor);
   }
 
-  useEffect(()=>{setCurrentColor(props.color)}, [setCurrentColor, props]);
+  useEffect(()=>{
+    setCurrentColor(highlighted? props.highlightColor: props.color);
+    setActive(props.active);
+  }, [setActive, setCurrentColor, props, highlighted]);
 
   return (
     <button
       className="player"
-      onClick={props.onClick}
+      onClick={()=>{
+        if(active){
+          setHighlighted(!highlighted);
+          props.changeHighlightCount(Math.pow(-1, highlighted+0));
+        }
+      }}
       style={{ color: currentColor }}
       onMouseEnter={() => setColorHighlight()}
-      onMouseLeave={() => setColorDefault()}
+      onMouseLeave={() => {highlighted? setColorHighlight(): setColorDefault()}}
     >
       {props.name}
     </button>
