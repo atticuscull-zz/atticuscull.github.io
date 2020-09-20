@@ -1,41 +1,41 @@
 import React, { useEffect, useState } from "react";
 import Player from "./Player.js";
+import GuessTeamButton from "./GuessTeamButton";
 
 function Playerlist (props) {
   const [players, setPlayers] = useState(props.playerlist);
-
-  function onTeam() {
-    return undefined;
-  }
-  function notOnTeam() {
-    return undefined;
-  }
+  const [highlightCount, setHighlightCount] = useState(0);
+  const [guessAvaialbe, setGuessAvailable] = useState(false);
 
   function renderPlayer(inPlayer) {
+    let isThisPlayer = (props.player.name === inPlayer.name);
     if(inPlayer.active) {
       return (<Player
         name={inPlayer.name}
-        color={(props.player.name === inPlayer.name) ? "green" : "grey"}
-        highlightColor={(props.player.name === inPlayer.name) ? "green" : "red"}
-        onClick={(props.player.shibboleth === inPlayer.shibboleth) ? onTeam : notOnTeam}
+        color={isThisPlayer ? "green" : "grey"}
+        highlightColor={isThisPlayer ? "green" : "red"}
         key={inPlayer.name}
+        changeHighlightCount={(n) => { setHighlightCount(highlightCount + n*(!isThisPlayer)) }}
+        active={true}
 
       />)
     } else if (props.gameRunning) {
       return (<Player
         name={inPlayer.name}
-        color={(props.player.name === inPlayer.name) ? "green" : "yellow"}
-        highlightColor={(props.player.name === inPlayer.name) ? "green" : "yellow"}
-        onClick={() => { }}
+        color={isThisPlayer ? "green" : "yellow"}
+        highlightColor={isThisPlayer ? "green" : "yellow"}
         key={inPlayer.name}
+        changeHighlightCount={(n)=>{}}
+        active={false}
       />)
     }
     return (<Player
       name={inPlayer.name}
-      color={(props.player.name === inPlayer.name) ? "green" : "grey"}
-      highlightColor={(props.player.name === inPlayer.name) ? "green" : "grey"}
-      onClick={() => { }}
+      color={isThisPlayer ? "green" : "grey"}
+      highlightColor={isThisPlayer ? "green" : "grey"}
       key={inPlayer.name}
+      changeHighlightCount={(n) => {}}
+      active={false}
     />)
     
 
@@ -43,7 +43,8 @@ function Playerlist (props) {
 
   useEffect(()=>{
     setPlayers(props.playerlist);
-  },[setPlayers, props])
+    setGuessAvailable((highlightCount===2));
+  },[setPlayers, props, highlightCount, setGuessAvailable])
 
   return(
     <div 
@@ -51,6 +52,7 @@ function Playerlist (props) {
     >
       <p className="header">Players</p>
       {players.map(e=> renderPlayer(e))}
+      <GuessTeamButton available={guessAvaialbe}/>
     </div>
   )
 }
