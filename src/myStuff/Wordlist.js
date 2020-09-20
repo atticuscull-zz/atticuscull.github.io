@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react"
-import Word from "./Word"
+import React, { useEffect, useState } from "react";
+import Word from "./Word";
+import styles from "./Constants/styles";
 
 function Wordlist (props) {
   const [words, setWords] = useState(props.wordlist)
 
   function renderWord(inWord) {
-    let wordColor = "grey";
+    let wordColor = styles.words.defaultColor;
     if (inWord === props.player.shibboleth) {
-      wordColor = "green";
+      wordColor = styles.words.shibbolethColor;
     }
     return (
       <Word
