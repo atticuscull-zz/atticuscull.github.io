@@ -7,6 +7,7 @@ function Playerlist (props) {
   const [players, setPlayers] = useState(props.playerlist);
   const [highlightCount, setHighlightCount] = useState(0);
   const [guessAvaialbe, setGuessAvailable] = useState(false);
+  const [gameRunning, setGameRunning] = useState(props.gameRunning);
 
   function renderPlayer(inPlayer) {
     let isThisPlayer = (props.player.name === inPlayer.name);
@@ -49,7 +50,8 @@ function Playerlist (props) {
   useEffect(()=>{
     setPlayers(props.playerlist);
     setGuessAvailable((highlightCount===2));
-  },[setPlayers, props, highlightCount, setGuessAvailable])
+    setGameRunning(props.gameRunning);
+  },[setGameRunning, setPlayers, props, highlightCount, setGuessAvailable])
 
   return(
     <div 
@@ -57,7 +59,7 @@ function Playerlist (props) {
     >
       <p className="header">Players</p>
       {players.map(e=> renderPlayer(e))}
-      <GuessTeamButton available={guessAvaialbe}/>
+      {gameRunning && <GuessTeamButton available={guessAvaialbe}/>}
     </div>
   )
 }
