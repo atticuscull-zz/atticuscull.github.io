@@ -10,11 +10,15 @@ function Playerlist (props) {
 
   function renderPlayer(inPlayer) {
     let isThisPlayer = (props.player.name === inPlayer.name);
+    let thisPlayerColor = styles.players.thisPlayerColor;
+    let defaultColor = styles.players.defaultColor;
+    let notPlayingColor = styles.players.notPlayingColor;
+    let highlightColor = styles.players.highlightColor;
     if(inPlayer.active) {
       return (<Player
         name={inPlayer.name}
-        color={isThisPlayer ? styles.players.thisPlayerColor : styles.players.defaultColor}
-        highlightColor={isThisPlayer ? styles.players.thisPlayerColor : styles.players.highlightColor}
+        color={isThisPlayer ? thisPlayerColor : defaultColor}
+        highlightColor={isThisPlayer ? thisPlayerColor : highlightColor}
         key={inPlayer.name}
         changeHighlightCount={(n) => { setHighlightCount(highlightCount + n*(!isThisPlayer)) }}
         active={true}
@@ -23,8 +27,8 @@ function Playerlist (props) {
     } else if (props.gameRunning) {
       return (<Player
         name={inPlayer.name}
-        color={isThisPlayer ? styles.players.thisPlayerColor : styles.players.notPlayingColor}
-        highlightColor={isThisPlayer ? styles.players.thisPlayerColor : styles.players.notPlayingColor}
+        color={isThisPlayer ? thisPlayerColor : notPlayingColor}
+        highlightColor={isThisPlayer ? thisPlayerColor : notPlayingColor}
         key={inPlayer.name}
         changeHighlightCount={(n)=>{}}
         active={false}
