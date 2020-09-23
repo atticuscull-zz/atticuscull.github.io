@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Word from "./Word";
 import styles from "./Constants/styles";
+import GuessWordButton from "./GuessWordButton";
 
 function rowBreak(arr) {
   let retarr = [];
@@ -13,6 +14,7 @@ function rowBreak(arr) {
 function Wordlist (props) {
   const [words, setWords] = useState(props.wordlist);
   const [highlightedWord, setHighlightedWord] = useState("");
+  const [gameRunning, setGameRunning] = useState(props.gameRunning);
 
   function renderWord(inWord) {
     let wordColor = styles.words.defaultColor;
@@ -44,7 +46,8 @@ function Wordlist (props) {
 
   useEffect(() => {
     setWords(props.wordlist);
-  }, [setWords, props]);
+    setGameRunning(props.gameRunning);
+  }, [setGameRunning, setWords, props]);
 
   //const wordCols = columnBreak(words);
 
@@ -63,6 +66,7 @@ function Wordlist (props) {
           {rowBreak(words).map(e=> <tr key={e[0]}>{e.map(f=>renderWord(f))}</tr>)}
         </tbody>
       </table>
+      {gameRunning && <GuessWordButton available={(highlightedWord != "")}/>}
 
     </div>
   )

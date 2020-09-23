@@ -116,6 +116,7 @@ function Game(props) {
         <Wordlist
           wordlist={wordlist}
           player={playerlist[thisPlayer]}
+          gameRunning={gameRunning}
         />
       </div>
       {gameRunning || (
