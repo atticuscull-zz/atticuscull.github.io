@@ -1,9 +1,21 @@
 import React, { useState } from "react";
 import Wordlist from "./Wordlist";
 import Playerlist from "./Playerlist";
+import wordlist2000 from "./Constants/wordlist";
+
+function generateRandomWordSet(numberOfWords, list){
+  if(numberOfWords === 1){
+    return [list[Math.floor(list.length*Math.random())]];
+  }
+  let randomIndex = Math.floor(list.length * Math.random())
+  return [list[randomIndex]].concat(...generateRandomWordSet(
+    numberOfWords - 1,
+    list.slice(0,randomIndex).concat(...list.slice(randomIndex+1))
+  ));
+}
 
 function Game(props) {
-  const [wordlist, setWordList] = useState(["hi", "ho"]);
+  const [wordlist, setWordList] = useState([]);
   const [playerlist, setPlayerlist] = useState([{
       name: "Atticus", 
       shibboleth: "c",
@@ -25,20 +37,16 @@ function Game(props) {
       shibboleth: "b",
       active: false
     }]);
-  const [teams, setTeams] = useState([[playerlist[0]],[playerlist[1]]]);
   const thisPlayer = 0;
   const [gameRunning, setGameRunning] = useState(false);
 
   function newWordSet() {
-    let newlist = [];
-    for (let i = 0; i < 2; i++) {
-      newlist.push("b");
-      for (let j = 0; j < i; j++) {
-        newlist[i] += "a";
-      }
-    }
-    setWordList(newlist);
+    let L = generateRandomWordSet(18, wordlist2000.split(","))
+    setWordList(L);
+    return L;
   }
+
+  /*
 
   function updatePlayerInList(playerIndex, newPlayer) {
     let newList = [];
@@ -52,27 +60,46 @@ function Game(props) {
     newList.push(...playerlist, player);
     setPlayerlist(newList);
   }
+  */
 
-  function randomizeTeams() {
+  function randomizeTeams(words) {
     let p = []
     let newTeams = [[],[]]
-    p.push(...playerlist)
+    p.push(...playerlist);
     while(p.length > 0){
       let L = p.length;
       let index = Math.floor(L * Math.random());
-      newTeams[L % 2].push(p.splice(index, 1));
+      newTeams[L % 2].push(p.splice(index, 1)[0]);
     }
-    setTeams(newTeams);
+    setShibboleths(newTeams, words)
+  }
+
+  function setShibboleths(newTeams, words) {
+    let w1 = Math.floor(18*Math.random());
+    let w2 = Math.floor(17*Math.random());
+    w2 += (w2>=w1);
+    w1 = words[w1];
+    w2 = words[w2];
+    let newList = [];
+    newTeams[0].forEach((p)=>{
+      p.shibboleth = w1;
+      newList.push(p);
+    });
+    newTeams[1].forEach((p) => {
+      p.shibboleth = w2;
+      newList.push(p);
+    });
+
+    setPlayerlist(newList);
   }
 
   function onStartRound(){
-    newWordSet();
     setPlayerlist(playerlist.map(function(e) {
       let newE = e
       newE.active = true;
       return newE
-    }))
-    randomizeTeams();
+    }));
+    randomizeTeams(newWordSet());
     setGameRunning(true);
   }
 
