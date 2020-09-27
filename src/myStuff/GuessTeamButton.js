@@ -8,13 +8,16 @@ function GuessTeamButton(props) {
   },[setAvailable, props])
 
   return (
-    <button
-      className="guessButton"
-      style={{
-        background: available ? styles.guessTeam.activeBG : styles.guessTeam.inactiveBG,
-        color: available ? styles.guessTeam.activeTextColor : styles.guessTeam.inactiveTextColor
-      }}
-    >Guess Team</button>
+    <div>
+      <button
+        className="guessButton"
+        style={{
+          background: available ? styles.guessTeam.activeBG : styles.guessTeam.inactiveBG,
+          color: available ? styles.guessTeam.activeTextColor : styles.guessTeam.inactiveTextColor
+        }}
+        onClick={()=>props.onClick()}
+      >Guess Team</button>
+    </div>
   )
 }
 

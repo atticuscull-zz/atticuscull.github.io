@@ -24,7 +24,7 @@ function Player(props){
       onClick={()=>{
         if(active){
           setHighlighted(!highlighted);
-          props.changeHighlightCount(Math.pow(-1, highlighted+0));
+          props.changeHighlightCount(Math.pow(-1, highlighted+0), props.name);
         }
       }}
       style={{ color: currentColor }}

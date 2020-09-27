@@ -47,14 +47,15 @@ function Wordlist (props) {
   useEffect(() => {
     setWords(props.wordlist);
     setGameRunning(props.gameRunning);
-  }, [setGameRunning, setWords, props]);
-
-  //const wordCols = columnBreak(words);
+    if(!props.gameRunning){
+      setHighlightedWord("");
+    }
+  }, [setHighlightedWord, setGameRunning, setWords, props]);
 
   return (
     <div className="wordlist">
       <p className="header">Words</p>
-      <table style={{width: "100%"}}>
+      {gameRunning && <table style={{width: "100%"}}>
         <thead>
           <tr>
             <th></th>
@@ -65,8 +66,8 @@ function Wordlist (props) {
         <tbody>
           {rowBreak(words).map(e=> <tr key={e[0]}>{e.map(f=>renderWord(f))}</tr>)}
         </tbody>
-      </table>
-      {gameRunning && <GuessWordButton available={(highlightedWord != "")}/>}
+      </table>}
+      {gameRunning && <GuessWordButton onClick = {(highlightedWord === "")? ()=>{}: ()=>{props.onClick(highlightedWord)}} available={(highlightedWord !== "")}/>}
 
     </div>
   )

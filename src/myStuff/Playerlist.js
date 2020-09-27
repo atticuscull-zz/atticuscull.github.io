@@ -6,8 +6,9 @@ import styles from "./Constants/styles";
 function Playerlist (props) {
   const [players, setPlayers] = useState(props.playerlist);
   const [highlightCount, setHighlightCount] = useState(0);
-  const [guessAvaialbe, setGuessAvailable] = useState(false);
+  const [guessAvailable, setGuessAvailable] = useState(false);
   const [gameRunning, setGameRunning] = useState(props.gameRunning);
+  const [highlightList, setHighlightList] = useState([]);
 
   function renderPlayer(inPlayer) {
     let isThisPlayer = (props.player.name === inPlayer.name);
@@ -21,7 +22,22 @@ function Playerlist (props) {
         color={isThisPlayer ? thisPlayerColor : defaultColor}
         highlightColor={isThisPlayer ? thisPlayerColor : highlightColor}
         key={inPlayer.name}
-        changeHighlightCount={(n) => { setHighlightCount(highlightCount + n*(!isThisPlayer)) }}
+        changeHighlightCount={(n, name) => {
+          if(!isThisPlayer){
+            setHighlightCount(highlightCount + n);
+
+            var h = [];
+            if (highlightList.includes(name)) {
+              let I = highlightList.indexOf(name);
+              h = highlightList.slice(0, I).concat(highlightList.slice(I + 1, highlightList.length));
+            } else {
+              h = [].concat(highlightList);
+              h.push(name);
+            }
+            setHighlightList(h);
+          }
+          
+        }}
         active={true}
 
       />)
@@ -59,7 +75,7 @@ function Playerlist (props) {
     >
       <p className="header">Players</p>
       {players.map(e=> renderPlayer(e))}
-      {gameRunning && <GuessTeamButton available={guessAvaialbe}/>}
+      {gameRunning && <GuessTeamButton onClick={guessAvailable? ()=>props.onClick(highlightList): ()=>{}} available={guessAvailable}/>}
     </div>
   )
 }
