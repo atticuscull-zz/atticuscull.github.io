@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Wordlist from "./Wordlist";
 import Playerlist from "./Playerlist";
 import wordlist2000 from "./Constants/wordlist";
+import GameLog from "./GameLog";
 
 function generateRandomWordSet(numberOfWords, list){
   if(numberOfWords === 1){
@@ -39,6 +40,8 @@ function Game(props) {
     }]);
   const thisPlayer = 0;
   const [gameRunning, setGameRunning] = useState(false);
+  const [teamShibboleths, setTeamShibboleths] = useState([]);
+  const [history, setHistory] = useState([]);
 
   function newWordSet() {
     let L = generateRandomWordSet(18, wordlist2000.split(","))
@@ -80,6 +83,7 @@ function Game(props) {
     w2 += (w2>=w1);
     w1 = words[w1];
     w2 = words[w2];
+    setTeamShibboleths([w1, w2]);
     let newList = [];
     newTeams[0].forEach((p)=>{
       p.shibboleth = w1;
@@ -89,11 +93,11 @@ function Game(props) {
       p.shibboleth = w2;
       newList.push(p);
     });
-
-    setPlayerlist(newList);
+    let P = playerlist.map(e => e.name);
+    setPlayerlist(newList.sort((a, b) => P.indexOf(a.name) - P.indexOf(b.name) ));
   }
 
-  function onStartRound(){
+  function onStartRound() {
     setPlayerlist(playerlist.map(function(e) {
       let newE = e
       newE.active = true;
@@ -101,29 +105,82 @@ function Game(props) {
     }));
     randomizeTeams(newWordSet());
     setGameRunning(true);
+    addMessage([{
+      type: "RS",
+      parts: {
+        players: playerlist.map(e=>e.name),
+        words: []
+      }
+    }])
+  }
+
+  function endRound(win) {
+    setGameRunning(false);
+    setPlayerlist(playerlist.map(function (e) {
+      let newE = e
+      newE.active = false;
+      return newE
+    }));
+    let Teams = playerlist.reduce((a, e)=> {
+      if(!a.includes(e.shibboleth)){
+        return a.concat([e.shibboleth]);
+      }
+      return a
+    }, [playerlist[thisPlayer].shibboleth]);
+    return({
+      type: "RO",
+      parts: {
+        players: playerlist.map(e => e.name),
+        words: [win? Teams[0]: Teams[1]]
+      }
+    })
+  }
+
+  function addMessage(messages) {
+    let h = [];
+    h.push(...history);
+    let m = messages;
+    m.map(e=>{
+      e.index = history.length + m.indexOf(e)
+      return e
+    });
+    h.push(...m);
+    setHistory(h);
   }
 
   return(
     <div className="game">
-      <div>
+      <div className="leftside">
         <Playerlist
           playerlist={playerlist}
           player={playerlist[thisPlayer]}
           gameRunning={gameRunning}
+          onClick={(guessedPlayers)=>{
+            let P = playerlist.map(e => e.name);
+            addMessage([{ type: "TG", parts: { players: [playerlist[thisPlayer].name, ...guessedPlayers.sort((a, b) => P.indexOf(a) - P.indexOf(b))], words: [] } }]);
+          }}
         />
-      </div>
-      <div>
         <Wordlist
           wordlist={wordlist}
           player={playerlist[thisPlayer]}
           gameRunning={gameRunning}
+          onClick={(h)=>{
+            addMessage([
+              { type: "WG", parts: { players: [playerlist[thisPlayer].name], words: [h] } },
+              endRound(teamShibboleths.includes(h) && playerlist[thisPlayer].shobboleth !== h)
+            ]);
+          }}
         />
+        {gameRunning || (
+          <button onClick={() => onStartRound()} className="start-button">
+            Start Round
+          </button>)
+        }
       </div>
-      {gameRunning || (
-        <button onClick={() => onStartRound()} className="start-button">
-          Start Round
-        </button>)
-      }
+      <div className="rightside">
+        <GameLog history={history} />
+      </div>
+      
 
     </div>
   )

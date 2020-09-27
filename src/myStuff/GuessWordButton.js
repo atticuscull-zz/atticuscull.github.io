@@ -14,6 +14,7 @@ function GuessWordButton(props) {
         background: available ? styles.guessTeam.activeBG : styles.guessTeam.inactiveBG,
         color: available ? styles.guessTeam.activeTextColor : styles.guessTeam.inactiveTextColor
       }}
+      onClick={props.onClick}
     >Guess Word</button>
   )
 }
