@@ -164,6 +164,9 @@ function Game(props) {
     socket.on("FromAPI", data => {
       setTime(data);
     });
+    socket.on("startRound", ()=>{
+      onStartRound();
+    })
   },[])
 
   return(
@@ -191,7 +194,7 @@ function Game(props) {
           }}
         />
         {gameRunning || (
-          <button onClick={() => onStartRound()} className="start-button">
+          <button onClick={()=>{socket.emit("startRound")}} className="start-button">
             Start Round
           </button>)
         }
