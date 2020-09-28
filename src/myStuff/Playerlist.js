@@ -75,7 +75,11 @@ function Playerlist (props) {
     >
       <p className="header">Players</p>
       {players.map(e=> renderPlayer(e))}
-      {gameRunning && <GuessTeamButton onClick={guessAvailable? ()=>props.onClick(highlightList): ()=>{}} available={guessAvailable}/>}
+      {gameRunning && <GuessTeamButton
+        onClick={guessAvailable? ()=>props.onClick(highlightList): ()=>{}}
+        available={guessAvailable}
+        emit={props.emit}
+      />}
     </div>
   )
 }

@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Wordlist from "./Wordlist";
 import Playerlist from "./Playerlist";
 import wordlist2000 from "./Constants/wordlist";
 import GameLog from "./GameLog";
+import Timer from "./Timer";
+import socketIOClient from "socket.io-client";
+
+const ENDPOINT = "http://127.0.0.1:4001";
+const S = socketIOClient(ENDPOINT);
+S.on("index", i => {
+  S.on("getIndex", () => {
+    S.emit("sendIndex", i);
+  })
+});
 
 function generateRandomWordSet(numberOfWords, list){
   if(numberOfWords === 1){
@@ -42,6 +52,8 @@ function Game(props) {
   const [gameRunning, setGameRunning] = useState(false);
   const [teamShibboleths, setTeamShibboleths] = useState([]);
   const [history, setHistory] = useState([]);
+  const [socket, setSocket] = useState(S);
+  const [time, setTime] = useState(0);
 
   function newWordSet() {
     let L = generateRandomWordSet(18, wordlist2000.split(","))
@@ -49,7 +61,7 @@ function Game(props) {
     return L;
   }
 
-  /*
+  {/*
 
   function updatePlayerInList(playerIndex, newPlayer) {
     let newList = [];
@@ -63,7 +75,7 @@ function Game(props) {
     newList.push(...playerlist, player);
     setPlayerlist(newList);
   }
-  */
+*/}
 
   function randomizeTeams(words) {
     let p = []
@@ -148,6 +160,12 @@ function Game(props) {
     setHistory(h);
   }
 
+  useEffect(()=>{
+    socket.on("FromAPI", data => {
+      setTime(data);
+    });
+  },[])
+
   return(
     <div className="game">
       <div className="leftside">
@@ -159,6 +177,7 @@ function Game(props) {
             let P = playerlist.map(e => e.name);
             addMessage([{ type: "TG", parts: { players: [playerlist[thisPlayer].name, ...guessedPlayers.sort((a, b) => P.indexOf(a) - P.indexOf(b))], words: [] } }]);
           }}
+          emit={()=>{socket.emit("resetTimer")}}
         />
         <Wordlist
           wordlist={wordlist}
@@ -176,12 +195,11 @@ function Game(props) {
             Start Round
           </button>)
         }
+        <Timer time={time} />
       </div>
       <div className="rightside">
         <GameLog history={history} />
       </div>
-      
-
     </div>
   )
 }
