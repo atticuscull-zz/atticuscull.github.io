@@ -55,12 +55,6 @@ function Game(props) {
   const [socket, setSocket] = useState(S);
   const [time, setTime] = useState(0);
 
-  function newWordSet() {
-    let L = generateRandomWordSet(18, wordlist2000.split(","))
-    setWordList(L);
-    return L;
-  }
-
   {/*
 
   function updatePlayerInList(playerIndex, newPlayer) {
@@ -109,13 +103,14 @@ function Game(props) {
     setPlayerlist(newList.sort((a, b) => P.indexOf(a.name) - P.indexOf(b.name) ));
   }
 
-  function onStartRound() {
+  function onStartRound(newList) {
     setPlayerlist(playerlist.map(function(e) {
       let newE = e
       newE.active = true;
       return newE
     }));
-    randomizeTeams(newWordSet());
+    setWordList(newList);
+    randomizeTeams(newList);
     setGameRunning(true);
     addMessage([{
       type: "RS",
@@ -164,8 +159,8 @@ function Game(props) {
     socket.on("FromAPI", data => {
       setTime(data);
     });
-    socket.on("startRound", ()=>{
-      onStartRound();
+    socket.on("startRound", (newList)=>{
+      onStartRound(newList)
     })
   },[])
 
