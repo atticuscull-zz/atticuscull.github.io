@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Wordlist from "./Wordlist";
 import Playerlist from "./Playerlist";
-import wordlist2000 from "./Constants/wordlist";
 import GameLog from "./GameLog";
 import Timer from "./Timer";
 import socketIOClient from "socket.io-client";
@@ -13,17 +12,6 @@ S.on("index", i => {
     S.emit("sendIndex", i);
   })
 });
-
-function generateRandomWordSet(numberOfWords, list){
-  if(numberOfWords === 1){
-    return [list[Math.floor(list.length*Math.random())]];
-  }
-  let randomIndex = Math.floor(list.length * Math.random())
-  return [list[randomIndex]].concat(...generateRandomWordSet(
-    numberOfWords - 1,
-    list.slice(0,randomIndex).concat(...list.slice(randomIndex+1))
-  ));
-}
 
 function Game(props) {
   const [wordlist, setWordList] = useState([]);
@@ -55,7 +43,7 @@ function Game(props) {
   const [socket, setSocket] = useState(S);
   const [time, setTime] = useState(0);
 
-  {/*
+  if (1) {/*
 
   function updatePlayerInList(playerIndex, newPlayer) {
     let newList = [];
@@ -71,46 +59,26 @@ function Game(props) {
   }
 */}
 
-  function randomizeTeams(words) {
-    let p = []
-    let newTeams = [[],[]]
-    p.push(...playerlist);
-    while(p.length > 0){
-      let L = p.length;
-      let index = Math.floor(L * Math.random());
-      newTeams[L % 2].push(p.splice(index, 1)[0]);
-    }
-    setShibboleths(newTeams, words)
-  }
+  function setShibboleths(newTeams, w1, w2) {
+  setTeamShibboleths([w1, w2]);
+  let newList = [];
+  newTeams[0].forEach((p) => {
+    p.shibboleth = w1;
+    p.active = true;
+    newList.push(p);
+  });
+  newTeams[1].forEach((p) => {
+    p.shibboleth = w2;
+    p.active = true;
+    newList.push(p);
+  });
+  let P = playerlist.map(e => e.name);
+  setPlayerlist(newList.sort((a, b) => P.indexOf(a.name) - P.indexOf(b.name)));
+}
 
-  function setShibboleths(newTeams, words) {
-    let w1 = Math.floor(18*Math.random());
-    let w2 = Math.floor(17*Math.random());
-    w2 += (w2>=w1);
-    w1 = words[w1];
-    w2 = words[w2];
-    setTeamShibboleths([w1, w2]);
-    let newList = [];
-    newTeams[0].forEach((p)=>{
-      p.shibboleth = w1;
-      newList.push(p);
-    });
-    newTeams[1].forEach((p) => {
-      p.shibboleth = w2;
-      newList.push(p);
-    });
-    let P = playerlist.map(e => e.name);
-    setPlayerlist(newList.sort((a, b) => P.indexOf(a.name) - P.indexOf(b.name) ));
-  }
-
-  function onStartRound(newList) {
-    setPlayerlist(playerlist.map(function(e) {
-      let newE = e
-      newE.active = true;
-      return newE
-    }));
+  function onStartRound(newList, newTeams, w1, w2) {
     setWordList(newList);
-    randomizeTeams(newList);
+    setShibboleths(newTeams, w1, w2);
     setGameRunning(true);
     addMessage([{
       type: "RS",
@@ -159,8 +127,8 @@ function Game(props) {
     socket.on("FromAPI", data => {
       setTime(data);
     });
-    socket.on("startRound", (newList)=>{
-      onStartRound(newList)
+    socket.on("startRound", (newList, newTeams, w1, w2)=>{
+      onStartRound(newList, newTeams, w1, w2);
     })
   },[])
 
@@ -189,7 +157,7 @@ function Game(props) {
           }}
         />
         {gameRunning || (
-          <button onClick={()=>{socket.emit("startRound")}} className="start-button">
+          <button onClick={()=>{socket.emit("startRound", playerlist)}} className="start-button">
             Start Round
           </button>)
         }
