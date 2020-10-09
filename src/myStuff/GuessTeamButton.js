@@ -7,11 +7,6 @@ function GuessTeamButton(props) {
   useEffect(()=>{
     setAvailable(props.available);
   },[setAvailable, props]);
-  
-  function resetTimer() {
-    props.emit();
-    console.log("hi");
-  }
 
   return (
     <div>
@@ -21,7 +16,7 @@ function GuessTeamButton(props) {
           background: available ? styles.guessTeam.activeBG : styles.guessTeam.inactiveBG,
           color: available ? styles.guessTeam.activeTextColor : styles.guessTeam.inactiveTextColor
         }}
-        onClick={() => { props.onClick(); resetTimer()}}
+        onClick={() => { props.onClick()}}
       >Guess Team</button>
     </div>
   )

@@ -27,7 +27,8 @@ function Message(props) {
         <p className="logtext"> were on their team</p>
       </div>}
       {(messageType === "RO") && <div>
-        <p className="logtext">The round ended and team </p>
+        <p className="logplayer">{messageParts.players[0]}</p>
+        <p className="logtext">was {messageParts.players[1]} and team </p>
         <p className="logword">{messageParts.words[0]}</p>
         <p className="logtext"> wins!</p>
         <hr className="rounddivider"/>

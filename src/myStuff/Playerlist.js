@@ -11,6 +11,7 @@ function Playerlist (props) {
   const [highlightList, setHighlightList] = useState([]);
 
   function renderPlayer(inPlayer) {
+    //console.log(props, inPlayer);
     let isThisPlayer = (props.player.name === inPlayer.name);
     let thisPlayerColor = styles.players.thisPlayerColor;
     let defaultColor = styles.players.defaultColor;
@@ -78,7 +79,7 @@ function Playerlist (props) {
       {gameRunning && <GuessTeamButton
         onClick={guessAvailable? ()=>props.onClick(highlightList): ()=>{}}
         available={guessAvailable}
-        emit={props.emit}
+        
       />}
     </div>
   )
