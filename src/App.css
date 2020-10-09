@@ -53,8 +53,16 @@
   border: 0px solid #000000;
   border-radius: 5px;
   font-size: 20px;
+  font-family: "Whitney"; 
+}
+
+.changenamebutton {
+  background-color: #797979;
+  border: 0px solid #000000;
+  border-radius: 5px;
+  font-size: 20px;
   font-family: "Whitney";
-  
+  margin-bottom: 6px;
 }
 
 .playerlist {
